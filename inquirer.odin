@@ -83,7 +83,7 @@ exec_confirm :: proc( self: Confirm, allocator := context.allocator ) -> bool {
             case Enter: 
                 response := strings.to_string(response_string)
                 response_lower := strings.to_lower(response, allocator)
-                defer delete(response_lower)
+                defer delete(response_lower, allocator)
 
                 if index, _ := strings.index_multi( response_lower, {"yes", "y"} ); index != -1 {
                     Exec("\n", Reset)
