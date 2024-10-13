@@ -66,12 +66,12 @@ make_confirm :: proc ( text : string ) -> Confirm {
     }
 }
 
-confirm :: proc ( text : string, allocator := context.allocator ) -> string {
+confirm :: proc ( text : string, allocator := context.allocator ) -> bool {
     self := make_confirm( text )
     return exec(self, allocator)
 }
 
-exec_confirm :: proc( self: Confirm, allocator := context.allocator ) -> string {
+exec_confirm :: proc( self: Confirm, allocator := context.allocator ) -> bool {
 
     Exec( Green ,"? ", Gray , self.text, " (y/n) " , LightseaGreen, SaveCursor )
     response_string := strings.builder_make(allocator)
@@ -87,11 +87,11 @@ exec_confirm :: proc( self: Confirm, allocator := context.allocator ) -> string 
 
                 if index, _ := strings.index_multi( response_lower, {"yes", "y"} ); index != -1 {
                     Exec("\n", Reset)
-                    return "yes"
+                    return true
                 }
                 if index, _ := strings.index_multi( response_lower, {"no", "n"} ); index != -1 {
                     Exec("\n", Reset)
-                    return "no"
+                    return false
                 }
         }
         response := strings.to_string(response_string)
