@@ -50,7 +50,7 @@ exec_question :: proc( self: Question, allocator := context.allocator ) -> strin
         input_editor_handler(&response_string, c)
         #partial switch value in c {
             case Enter: 
-                Exec("\n", Reset)
+                Exec("\n", ShowCursor, Reset)
                 response := strings.to_string(response_string)
                 return response
         }
@@ -86,11 +86,11 @@ exec_confirm :: proc( self: Confirm, allocator := context.allocator ) -> bool {
                 defer delete(response_lower, allocator)
 
                 if index, _ := strings.index_multi( response_lower, {"yes", "y"} ); index != -1 {
-                    Exec("\n", Reset)
+                    Exec("\n", ShowCursor, Reset)
                     return true
                 }
                 if index, _ := strings.index_multi( response_lower, {"no", "n"} ); index != -1 {
-                    Exec("\n", Reset)
+                    Exec("\n", ShowCursor, Reset)
                     return false
                 }
         }
@@ -121,7 +121,7 @@ exec_password :: proc( self: Password, allocator := context.allocator ) -> strin
         input_editor_handler(&response_string, c)
         #partial switch value in c {
             case Enter:
-                Exec("\n", Reset)
+                Exec("\n", ShowCursor, Reset)
                 response := strings.to_string(response_string)
                 return response
         }
@@ -162,7 +162,7 @@ exec_select :: proc( self: Select, allocator := context.allocator ) -> string {
             case Down: 
                 self.option_index = (self.option_index + 1) % len( self.options ) 
             case Enter: 
-                Exec("\n", Reset)
+                Exec("\n", ShowCursor, Reset)
                 return self.options[self.option_index]
         }
         Exec( CursorUp( len(self.options) ) )
@@ -207,7 +207,7 @@ exec_multiselect :: proc( self: MultiSelect, allocator := context.allocator ) ->
             case Down: 
                 self.option_index = (self.option_index + 1) % len( self.options ) 
             case Enter: 
-                Exec(Reset)
+                Exec(ShowCursor, Reset)
 
                 results := make([]string, selected_len, allocator)
                 counter := 0
